@@ -9,3 +9,9 @@ xcodegen generate && open Esayari.xcodeproj
 - アイコンは `swift tools/icon.swift Esayari/Assets.xcassets/AppIcon.appiconset/icon.png` で描き直す
 - `-demo` を付けて起動すると見本の魚が入る（ストアのスクリーンショット用、保存しない）
 - 掲載文は STORE.md、プライバシーポリシーは docs/privacy.html
+
+## 広告
+
+一覧の下に AdMob のバナーを出す（`Esayari/Ads.swift`）。ATT は求めず、非パーソナライズ広告だけ。
+いまは Google のテスト用 ID が入っている。AdMob でアプリとバナーの広告ユニットを作ったら、
+`project.yml` の `GADApplicationIdentifier` と `AdBanner.unit` を本物に差し替える。

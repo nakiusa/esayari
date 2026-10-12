@@ -1,9 +1,12 @@
 import SwiftUI
 import SwiftData
 import UserNotifications
+import GoogleMobileAds
 
 @main
 struct EsayariApp: App {
+    init() { MobileAds.shared.start() }
+
     var body: some Scene {
         WindowGroup {
             FishList()
@@ -100,6 +103,10 @@ struct FishList: View {
                                                description: Text("右上の＋から、えさをあげる魚や水槽を登録します。"))
                     }
                 }
+            }
+            // ストアのスクリーンショットに第三者の広告は写せないので、見本のときは出さない。
+            .safeAreaInset(edge: .bottom) {
+                if !ProcessInfo.processInfo.arguments.contains("-demo") { AdBanner() }
             }
             .navigationTitle("えさやり帳")
             .toolbar {
