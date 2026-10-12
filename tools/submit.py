@@ -111,15 +111,11 @@ def main():
         patch("appInfoLocalizations", loc["id"], {"subtitle": "魚のえさの時刻を忘れない",
                                                   "privacyPolicyUrl": SITE + "privacy.html"})
     rating = asc("GET", f"/v1/appInfos/{info}/ageRatingDeclaration")["data"]
+    # 質問はすべて「なし」。項目は Apple が増やすので、いま返ってきたものに合わせて埋める。
+    # 値がまだ空（None）の項目は型が分からないので、エラーが出たらその名前を見て足す。
     patch("ageRatingDeclarations", rating["id"],
-          {k: (False if isinstance(v, bool) or v is None and k.startswith(("is", "has", "gambling", "unrestricted",
-                                                                          "lootBox", "messaging", "parental",
-                                                                          "ageAssurance", "userGenerated",
-                                                                          "advertising", "healthOr"))
-               else "NONE")
-           for k, v in rating["attributes"].items() if k not in ("ageRatingOverride", "ageRatingOverrideV2",
-                                                                 "koreaAgeRatingOverride", "kidsAgeBand",
-                                                                 "developerAgeRatingInfoUrl")})
+          {k: False if isinstance(v, bool) else "NONE" for k, v in rating["attributes"].items()
+           if isinstance(v, (bool, str)) and "Override" not in k and k not in ("kidsAgeBand", "developerAgeRatingInfoUrl")})
     print("アプリの情報を入れた")
 
     version = asc("GET", f"/v1/apps/{app_id}/appStoreVersions?filter[appStoreState]=PREPARE_FOR_SUBMISSION")["data"][0]
